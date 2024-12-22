@@ -2,27 +2,26 @@ import { useGlobalContext } from "./context";
 
 const SearchForm = () => {
   const { setSearchTerm } = useGlobalContext();
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const searchValue = e.target.elements.search.value;
-    if (!searchValue) return;
+
+  const handleInputChange = (e) => {
+    const searchValue = e.target.value.trim();
     setSearchTerm(searchValue);
   };
+
   return (
     <section>
-      <h1 className="title">unsplash images</h1>
-      <form className="search-form" onSubmit={handleSubmit}>
+      <h1 className="title">Unsplash Images</h1>
+      <form className="search-form">
         <input
           type="text"
           className="form-input search-input"
           name="search"
-          placeholder="cat"
+          placeholder="Search images..."
+          onChange={handleInputChange}
         />
-        <button type="submit" className="btn">
-          search
-        </button>
       </form>
     </section>
   );
 };
+
 export default SearchForm;

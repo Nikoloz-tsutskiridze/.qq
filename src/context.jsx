@@ -8,13 +8,15 @@ const getInitialDarkMode = () => {
   ).matches;
   const storedDarkMode = localStorage.getItem("darkTheme") === "true";
   const isDarkTheme = storedDarkMode || prefersDarkMode;
+
   document.body.classList.toggle("dark-theme", isDarkTheme);
+
   return isDarkTheme;
 };
 
 export const AppProvider = ({ children }) => {
   const [isDarkTheme, setIsDarkTheme] = useState(getInitialDarkMode());
-  const [searchTerm, setSearchTerm] = useState("cat");
+  const [searchTerm, setSearchTerm] = useState("dog");
   const toggleDarkTheme = () => {
     const newDarkTheme = !isDarkTheme;
     setIsDarkTheme(newDarkTheme);
