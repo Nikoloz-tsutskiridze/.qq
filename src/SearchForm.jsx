@@ -1,10 +1,12 @@
 import { useGlobalContext } from "./context";
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 const SearchForm = () => {
   const { setSearchTerm } = useGlobalContext();
   const [inputValue, setInputValue] = useState("");
   const [debounceTimer, setDebounceTimer] = useState(null);
+
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
@@ -15,24 +17,43 @@ const SearchForm = () => {
 
     const timer = setTimeout(() => {
       const trimmedValue = value.trim();
-      setSearchTerm(trimmedValue);
-    }, 1000);
+      if (trimmedValue) {
+        setSearchTerm(trimmedValue);
+      }
+    }, 500);
 
     setDebounceTimer(timer);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const searchValue = e.target.elements.search.value.trim();
+    if (!searchValue) return;
+    setSearchTerm(searchValue);
+  };
+
   useEffect(() => {
-    return () => {
-      if (debounceTimer) {
-        clearTimeout(debounceTimer);
+    const fetchImages = async () => {
+      if (!inputValue) return;
+
+      try {
+        await axios.get(
+          `https://api.unsplash.com/search/photos?client_id=${
+            import.meta.env.VITE_API_KEY
+          }&query=${inputValue}`
+        );
+      } catch (error) {
+        console.error(error);
       }
     };
-  }, [debounceTimer]);
+
+    fetchImages();
+  }, [inputValue]);
 
   return (
     <section>
       <h1 className="title">Unsplash Images</h1>
-      <form className="search-form">
+      <form className="search-form" onSubmit={handleSubmit}>
         <input
           type="text"
           className="form-input search-input"
@@ -41,6 +62,9 @@ const SearchForm = () => {
           value={inputValue}
           onChange={handleInputChange}
         />
+        <button type="submit" className="btn">
+          Search
+        </button>
       </form>
     </section>
   );
