@@ -20,7 +20,7 @@ const SearchForm = () => {
       if (trimmedValue) {
         setSearchTerm(trimmedValue);
       }
-    }, 500);
+    }, 1000);
 
     setDebounceTimer(timer);
   };
@@ -62,9 +62,6 @@ const SearchForm = () => {
           value={inputValue}
           onChange={handleInputChange}
         />
-        <button type="submit" className="btn">
-          Search
-        </button>
       </form>
     </section>
   );

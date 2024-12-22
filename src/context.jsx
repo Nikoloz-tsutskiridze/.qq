@@ -4,17 +4,19 @@ const AppContext = createContext();
 
 const getInitialDarkMode = () => {
   if (typeof window !== "undefined") {
-    const prefersDarkMode = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    const storedDarkMode = localStorage.getItem("darkTheme") === "true";
-    const isDarkTheme = storedDarkMode || prefersDarkMode;
+    let storedDarkMode = localStorage.getItem("darkTheme");
 
+    if (storedDarkMode === null) {
+      storedDarkMode = "true";
+      localStorage.setItem("darkTheme", storedDarkMode);
+    }
+
+    const isDarkTheme = storedDarkMode === "true";
     document.body.classList.toggle("dark-theme", isDarkTheme);
 
     return isDarkTheme;
   }
-  return false;
+  return true;
 };
 
 export const AppProvider = ({ children }) => {

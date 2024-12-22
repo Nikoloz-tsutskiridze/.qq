@@ -389,3 +389,94 @@ Gallery
     grid-template-columns: 1fr 1fr 1fr;
   }
 }
+.image-container img {
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.image-container img:hover {
+  transform: scale(1.1);
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.pagination button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: var(--primary-700);
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 1rem;
+  color: white;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #000000;
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 600px;
+  width: 90%;
+  position: relative;
+}
+
+.modal-content img {
+  width: 70%;
+  border-radius: 10px;
+}
+
+.modal-content .photo-details {
+  margin-top: 1rem;
+  text-align: left;
+  color: white;
+  line-height: 1.4rem;
+}
+
+.close-btn {
+  position: absolute;
+  top: 25px;
+  right: 35px;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: red;
+}
+
+.close-btn:hover {
+  color: rgb(166, 0, 0);
+}
+
+.photographer {
+  color: orange;
+}
