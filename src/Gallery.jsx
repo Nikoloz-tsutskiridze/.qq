@@ -8,6 +8,9 @@ const Gallery = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["images", searchTerm],
     queryFn: async () => {
+      if (!searchTerm.trim()) {
+        return { results: [] };
+      }
       const response = await axios.get(
         `https://api.unsplash.com/search/photos?client_id=${
           import.meta.env.VITE_API_KEY
@@ -15,7 +18,16 @@ const Gallery = () => {
       );
       return response.data;
     },
+    enabled: !!searchTerm.trim(),
   });
+
+  if (!searchTerm.trim()) {
+    return (
+      <section className="image-container">
+        <h4>Please enter a search term...</h4>
+      </section>
+    );
+  }
 
   if (isLoading) {
     return (
