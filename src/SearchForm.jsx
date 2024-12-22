@@ -1,12 +1,33 @@
 import { useGlobalContext } from "./context";
+import { useState, useEffect } from "react";
 
 const SearchForm = () => {
   const { setSearchTerm } = useGlobalContext();
-
+  const [inputValue, setInputValue] = useState("");
+  const [debounceTimer, setDebounceTimer] = useState(null);
   const handleInputChange = (e) => {
-    const searchValue = e.target.value.trim();
-    setSearchTerm(searchValue);
+    const value = e.target.value;
+    setInputValue(value);
+
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
+    }
+
+    const timer = setTimeout(() => {
+      const trimmedValue = value.trim();
+      setSearchTerm(trimmedValue);
+    }, 1000);
+
+    setDebounceTimer(timer);
   };
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimer) {
+        clearTimeout(debounceTimer);
+      }
+    };
+  }, [debounceTimer]);
 
   return (
     <section>
@@ -17,6 +38,7 @@ const SearchForm = () => {
           className="form-input search-input"
           name="search"
           placeholder="Search images..."
+          value={inputValue}
           onChange={handleInputChange}
         />
       </form>

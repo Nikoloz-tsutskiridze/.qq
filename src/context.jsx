@@ -3,15 +3,18 @@ import { createContext, useContext, useState } from "react";
 const AppContext = createContext();
 
 const getInitialDarkMode = () => {
-  const prefersDarkMode = window.matchMedia(
-    "(prefers-color-scheme:dark)"
-  ).matches;
-  const storedDarkMode = localStorage.getItem("darkTheme") === "true";
-  const isDarkTheme = storedDarkMode || prefersDarkMode;
+  if (typeof window !== "undefined") {
+    const prefersDarkMode = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    const storedDarkMode = localStorage.getItem("darkTheme") === "true";
+    const isDarkTheme = storedDarkMode || prefersDarkMode;
 
-  document.body.classList.toggle("dark-theme", isDarkTheme);
+    document.body.classList.toggle("dark-theme", isDarkTheme);
 
-  return isDarkTheme;
+    return isDarkTheme;
+  }
+  return false;
 };
 
 export const AppProvider = ({ children }) => {
