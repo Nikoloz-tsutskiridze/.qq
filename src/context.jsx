@@ -1,31 +1,20 @@
+import PropTypes from "prop-types";
 import { createContext, useContext, useState } from "react";
+import { getLocalStorage, setLocalStorage } from "./utils/localStorage";
 
 const AppContext = createContext();
 
-const getInitialDarkMode = () => {
-  if (typeof window !== "undefined") {
-    let storedDarkMode = localStorage.getItem("darkTheme");
-
-    if (storedDarkMode === null) {
-      storedDarkMode = "true";
-      localStorage.setItem("darkTheme", storedDarkMode);
-    }
-
-    const isDarkTheme = storedDarkMode === "true";
-    document.body.classList.toggle("dark-theme", isDarkTheme);
-
-    return isDarkTheme;
-  }
-  return true;
-};
-
 export const AppProvider = ({ children }) => {
-  const [isDarkTheme, setIsDarkTheme] = useState(getInitialDarkMode());
+  const [isDarkTheme, setIsDarkTheme] = useState(
+    getLocalStorage("darkTheme", true)
+  );
   const [searchTerm, setSearchTerm] = useState("dog");
+
   const toggleDarkTheme = () => {
-    const newDarkTheme = !isDarkTheme;
-    setIsDarkTheme(newDarkTheme);
-    localStorage.setItem("darkTheme", newDarkTheme);
+    const newTheme = !isDarkTheme;
+    setIsDarkTheme(newTheme);
+    setLocalStorage("darkTheme", newTheme);
+    document.body.classList.toggle("dark-theme", newTheme);
   };
 
   return (
@@ -35,6 +24,10 @@ export const AppProvider = ({ children }) => {
       {children}
     </AppContext.Provider>
   );
+};
+
+AppProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export const useGlobalContext = () => useContext(AppContext);
