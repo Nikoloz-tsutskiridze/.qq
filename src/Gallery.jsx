@@ -4,19 +4,21 @@ import axios from "axios";
 import { useGlobalContext } from "./context";
 import { usePagination } from "./hooks/usePagination";
 import Modal from "./components/Modal";
+import { useDebounce } from "use-debounce";
 
 const Gallery = () => {
   const { searchTerm } = useGlobalContext();
+  const [debouncedSearchTerm] = useDebounce(searchTerm, 500);
   const { page, nextPage, prevPage } = usePagination();
   const [selectedPhoto, setSelectedPhoto] = useState(null);
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["images", searchTerm, page],
+    queryKey: ["images", debouncedSearchTerm, page],
     queryFn: async () => {
       const response = await axios.get(
         `https://api.unsplash.com/search/photos?client_id=${
           import.meta.env.VITE_API_KEY
-        }&query=${searchTerm}&page=${page}`
+        }&query=${debouncedSearchTerm}&page=${page}`
       );
       return response.data;
     },
@@ -24,7 +26,7 @@ const Gallery = () => {
   });
 
   if (isLoading) {
-    return <h4>Loading...</h4>;
+    return <h4 className="loading"></h4>;
   }
 
   if (isError) {

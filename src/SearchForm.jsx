@@ -1,54 +1,30 @@
 import { useGlobalContext } from "./context";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState } from "react";
 
 const SearchForm = () => {
   const { setSearchTerm } = useGlobalContext();
   const [inputValue, setInputValue] = useState("");
-  const [debounceTimer, setDebounceTimer] = useState(null);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
 
-    if (debounceTimer) {
-      clearTimeout(debounceTimer);
-    }
-
-    const timer = setTimeout(() => {
+    clearTimeout(window.debounceTimeout);
+    window.debounceTimeout = setTimeout(() => {
       const trimmedValue = value.trim();
       if (trimmedValue) {
         setSearchTerm(trimmedValue);
       }
-    }, 1000);
-
-    setDebounceTimer(timer);
+    }, 500);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const searchValue = e.target.elements.search.value.trim();
-    if (!searchValue) return;
-    setSearchTerm(searchValue);
+    const searchValue = inputValue.trim();
+    if (searchValue) {
+      setSearchTerm(searchValue);
+    }
   };
-
-  useEffect(() => {
-    const fetchImages = async () => {
-      if (!inputValue) return;
-
-      try {
-        await axios.get(
-          `https://api.unsplash.com/search/photos?client_id=${
-            import.meta.env.VITE_API_KEY
-          }&query=${inputValue}`
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchImages();
-  }, [inputValue]);
 
   return (
     <section>
